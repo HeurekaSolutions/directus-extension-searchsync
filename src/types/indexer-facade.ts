@@ -225,8 +225,6 @@ export class IndexerFacade {
 
 			for (const item of items) {
 				const id = item[pkName];
-				console.log("PREPARED ITEM")
-				console.log(item[pkName])
 				try {
 					await this.indexerInstance.upsertItem(collectionIndex, id, this.prepareObject(item, collectionName), pkName);
 
