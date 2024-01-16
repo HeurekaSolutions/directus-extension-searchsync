@@ -1,12 +1,6 @@
-import { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { IndexerConfig } from "../types/configuration/indexer-config";
 import { IndexerInterface } from "../types/indexer-interface";
-
-/**
- * @type {import("axios").AxiosInstance}
- */
-const axios = require('axios');
-
 
 export class Algolia extends IndexerInterface {
     // #region Properties
