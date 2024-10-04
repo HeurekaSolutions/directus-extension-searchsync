@@ -22,14 +22,20 @@ export class Algolia extends IndexerInterface {
             },
         };
 
-        if (config.key) {
-            this.axiosConfig.headers?.put('X-Algolia-API-Key', config.key);
+        if (config.key && this.axiosConfig.headers) {
+            this.axiosConfig.headers = {
+                ... this.axiosConfig.headers,
+                ... { 'X-Algolia-API-Key': config.key }
+            }
         } else {
             throw Error('No API Key set. The server.key is mandatory.');
         }
 
-        if (config.appId) {
-            this.axiosConfig.headers?.put('X-Algolia-Application-Id', config.appId);
+        if (config.appId && this.axiosConfig.headers) {
+            this.axiosConfig.headers = {
+                ... this.axiosConfig.headers,
+                ... { 'X-Algolia-Application-Id': config.appId }
+            }
         } else {
             throw Error('No Application ID set. The server.appId is mandatory.');
         }

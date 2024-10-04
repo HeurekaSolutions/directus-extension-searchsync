@@ -27,12 +27,17 @@ export class Meilisearch extends IndexerInterface {
 			headers: config.headers || {},
 		};
 
-		if (config.key && this.axiosConfig.headers) {
+		if (config.key) {
 			// Auth headers for 0.25+
-			this.axiosConfig.headers.Authorization = `Bearer ${config.key}`;
+			this.axiosConfig.headers = {
+				...this.axiosConfig.headers,
 
-			// Include old headers for compatibility with pre-0.25 versions of Meilisearch -- LEGACY of fork base
-			this.axiosConfig.headers.put('X-Meili-API-Key', config.key);
+				// Auth headers for 0.25+
+				... { 'Authorization': `Bearer ${config.key}` },
+
+				// Include old headers for compatibility with pre-0.25 versions of Meilisearch -- LEGACY of fork base
+				... { 'X-Meili-API-Key': `Bearer ${config.key}` }
+			};
 		}
 
 		if (!config.host) {
