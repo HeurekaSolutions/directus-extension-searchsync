@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { URL } from 'url';
+import axios, { AxiosRequestConfig } from "axios";
+import { URL } from "url";
 import { IndexerInterface } from "../types/indexer-interface";
 import { IndexerConfig } from "../types/configuration/indexer-config";
 
@@ -12,88 +12,104 @@ import { IndexerConfig } from "../types/configuration/indexer-config";
  * @extends {IndexerInterface}
  */
 export class Meilisearch extends IndexerInterface {
-	// #region Properties
+  // #region Properties
 
-	private readonly axiosConfig: AxiosRequestConfig;
+  private readonly axiosConfig: AxiosRequestConfig;
 
-	// #endregion
+  // #endregion
 
-	// #region Constructors
+  // #region Constructors
 
-	constructor(config: IndexerConfig) {
-		super(config);
+  constructor(config: IndexerConfig) {
+    super(config);
 
-		this.axiosConfig = {
-			headers: config.headers || {},
-		};
+    this.axiosConfig = {
+      headers: config.headers || {},
+    };
 
-		if (config.key) {
-			// Auth headers for 0.25+
-			this.axiosConfig.headers = {
-				...this.axiosConfig.headers,
+    if (config.key) {
+      // Auth headers for 0.25+
+      this.axiosConfig.headers = {
+        ...this.axiosConfig.headers,
 
-				// Auth headers for 0.25+
-				... { 'Authorization': `Bearer ${config.key}` },
+        // Auth headers for 0.25+
+        ...{ Authorization: `Bearer ${config.key}` },
 
-				// Include old headers for compatibility with pre-0.25 versions of Meilisearch -- LEGACY of fork base
-				... { 'X-Meili-API-Key': `Bearer ${config.key}` }
-			};
-		}
+        // Include old headers for compatibility with pre-0.25 versions of Meilisearch -- LEGACY of fork base
+        ...{ "X-Meili-API-Key": `Bearer ${config.key}` },
+      };
+    }
 
-		if (!config.host) {
-			throw Error('No HOST set. The server.host is mandatory.');
-		}
+    if (!config.host) {
+      throw Error("No HOST set. The server.host is mandatory.");
+    }
 
-		const host = new URL(config.host);
-		if (!host.hostname || (host.pathname && host.pathname !== '/')) {
-			throw Error(`Invalid server.host, it must be like http://meili.example.com/`);
-		}
-	}
+    const host = new URL(config.host);
+    if (!host.hostname || (host.pathname && host.pathname !== "/")) {
+      throw Error(
+        `Invalid server.host, it must be like http://meili.example.com/`
+      );
+    }
+  }
 
-	// #endregion
+  // #endregion
 
-	// #region Public Methods
+  // #region Public Methods
 
-	public override async createIndex(collectionName: string): Promise<void> {
-		// ? don't exactly know why this is unused, but took it like that from fork base.
-		// ? seems like some sort of extensibility measures for indexers/search engines that do not create indexes on insert.
-	}
+  public override async createIndex(collectionName: string): Promise<void> {
+    // ? don't exactly know why this is unused, but took it like that from fork base.
+    // ? seems like some sort of extensibility measures for indexers/search engines that do not create indexes on insert.
+  }
 
-	public override async deleteItem(collectionName: string, id: string): Promise<void> {
-		try {
-			await axios.delete(`${this.config.host}/indexes/${collectionName}/documents/${id}`, this.axiosConfig);
-		} catch (error: any) {
-			if (error.response && error.response.status === 404) return;
+  public override async deleteItem(
+    collectionName: string,
+    id: string
+  ): Promise<void> {
+    try {
+      await axios.delete(
+        `${this.config.host}/indexes/${collectionName}/documents/${id}`,
+        this.axiosConfig
+      );
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) return;
 
-			throw error;
-		}
-	}
+      throw error;
+    }
+  }
 
-	public override async deleteItems(collectionName: string): Promise<void> {
-		try {
-			await axios.delete(`${this.config.host}/indexes/${collectionName}`, this.axiosConfig);
-		} catch (error: any) {
-			if (error.response && error.response.status === 404) return;
+  public override async deleteItems(collectionName: string): Promise<void> {
+    try {
+      await axios.delete(
+        `${this.config.host}/indexes/${collectionName}`,
+        this.axiosConfig
+      );
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) return;
 
-			throw error;
-		}
-	}
+      throw error;
+    }
+  }
 
-	public override async upsertItem(collectionName: string, id: string, data: object, pk?: string | undefined): Promise<void> {
-		try {
-			await axios.post(
-				`${this.config.host}/indexes/${collectionName}/documents?primaryKey=${pk}`,
-				[{ [`${pk}`]: id, ...data }],
-				this.axiosConfig
-			);
-		} catch (error: any) {
-			if (error.response) {
-				throw { message: error.toString(), response: error.response };
-			}
+  public override async upsertItem(
+    collectionName: string,
+    id: string,
+    data: object,
+    pk?: string | undefined
+  ): Promise<void> {
+    try {
+      await axios.post(
+        `${this.config.host}/indexes/${collectionName}/documents?primaryKey=${pk}`,
+        [{ [`${pk}`]: id, ...data }],
+        this.axiosConfig
+      );
+    } catch (error: any) {
+      if (error.response) {
+        throw { message: error.toString(), response: error.response };
+      }
 
-			throw error;
-		}
-	}
+      throw error;
+    }
+  }
 
-	// #endregion
+  // #endregion
 }

@@ -13,15 +13,17 @@ import { IndexerInterface } from "./indexer-interface";
  * @return {*}  {IndexerInterface} An indexer used for operating on indexing systems/search engines.
  */
 export function buildIndexer(config: IndexerConfig): IndexerInterface {
-	const indexer = INDEXER_FACTORY_MAP.get(config.type);
-	if (!indexer)
-		throw new Error(`Indexer ${config.type} is not registered in INDEXER_FACTORY_MAP.`)
+  const indexer = INDEXER_FACTORY_MAP.get(config.type);
+  if (!indexer)
+    throw new Error(
+      `Indexer ${config.type} is not registered in INDEXER_FACTORY_MAP.`
+    );
 
-	const indexerInstance = new indexer(config);
-	if (!indexerInstance)
-		throw new Error(`Indexer ${indexer.name} could not be instantiated.`)
+  const indexerInstance = new indexer(config);
+  if (!indexerInstance)
+    throw new Error(`Indexer ${indexer.name} could not be instantiated.`);
 
-	return indexerInstance;
+  return indexerInstance;
 }
 
 // #endregion

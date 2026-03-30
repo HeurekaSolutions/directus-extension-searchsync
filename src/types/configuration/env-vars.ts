@@ -1,0 +1,1 @@
+export const CONFIG_PATH = "SEARCHSYNC_CONFIG_PATH";

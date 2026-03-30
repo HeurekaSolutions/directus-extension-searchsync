@@ -130,7 +130,6 @@ const config = {
   },
 };
 
-// Use as object.
 module.exports = config;
 ```
 
