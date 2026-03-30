@@ -1,13 +1,13 @@
 {
 	"name": "@heurekasolutions/directus-extension-searchsync",
 	"description": "A directus 11 compatible sync extension for meilisearch indexing",
-	"license": "GPL-3.0",
+	"license": "MIT",
 	"author": {
 		"email": "derskillbaumapfel@gmail.com",
 		"name": "DerSkillBaumApfel"
 	},
 	"icon": "extension",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"homepage": "https://github.com/HeurekaSolutions/directus-extension-searchsync",
 	"publishConfig": {
 		"registry": "https://npm.pkg.github.com/"
